@@ -1,0 +1,197 @@
+#!/usr/bin/env python3
+
+##
+## EPITECH PROJECT, 2022
+## Project
+## File description:
+## 104intersection
+##
+
+from math import *
+import sys
+
+def helper():
+    print("""
+USAGE
+    ./104intersection opt xp yp zp xv yv zv p
+
+DESCRIPTION
+    opt             surface option: 1 for a sphere, 2 for a cylinder, 3 for a cone
+    (xp, yp, zp)    coordinates of a point by which the light ray passes through
+    (xv, yv, zv)    coordinates of a vector parallel to the light ray
+    p               parameter: radius of the sphere, radius of the cylinder, or angle formed by the cone and the Z-axis
+""")
+    exit(0)
+
+
+def calcul_light_ray(point, vector):
+    line = [[0, 0, 0], [0, 0, 0], [0]]
+    line[1] = [vector[0] * line[2][0], vector[1] * line[2][0], vector[2] * line[2][0]]
+    line[0] = [point[0] + line[1][0], point[1] + line[1][1], point[2] + line[1][2]]
+    return(line)
+
+def calcul_delta_sphere(point, vector, parameter):
+    a = vector[0]**2 + vector[1]**2 + vector[2]**2
+    b = 2 * (point[0]*vector[0] + point[1]*vector[1] + point[2]*vector[2])
+    c = point[0]**2 + point[1]**2 + point[2]**2 - parameter**2
+    equation_value = [0, 0, 0]
+    equation_value[0] = a
+    equation_value[1] = b
+    equation_value[2] = c
+    delta = b**2 - (4*a*c)
+    return(delta, equation_value)
+
+def calcul_delta_cylinder(point, vector, parameter):
+    a = vector[0]**2 + vector[1]**2
+    b = 2 * (point[0]*vector[0] + point[1]*vector[1])
+    c = point[0]**2 + point[1]**2 - parameter**2
+    equation_value = [0, 0, 0]
+    equation_value[0] = a
+    equation_value[1] = b
+    equation_value[2] = c
+    delta = b**2 - (4*a*c)
+    return(delta, equation_value)
+
+def calcul_delta_cone(point, vector, parameter):
+    parameter = radians(parameter)
+    a = vector[0]**2 + vector[1]**2 - (((tan(parameter))**2)*(vector[2]**2))
+    b = 2 * (point[0]*vector[0] + point[1]*vector[1] - ((tan(parameter))**2)*point[2]*vector[2])
+    c = point[0]**2 + point[1]**2 - ((tan(parameter))**2)*point[2]**2
+    equation_value = [0, 0, 0]
+    equation_value[0] = a
+    equation_value[1] = b
+    equation_value[2] = c
+    delta = b**2 - (4*a*c)
+    return(delta, equation_value)
+
+def one_solution(delta, light_ray, vector, point, equation_value):
+    print("1 intersection point:")
+    time = ((equation_value[1] * (-1)) - sqrt(abs(delta))) / (2 * equation_value[0])
+    light_ray[2][0] = time
+    light_ray[1] = [vector[0] * light_ray[2][0], vector[1] * light_ray[2][0], vector[2] * light_ray[2][0]]
+    light_ray[0] = [point[0] + light_ray[1][0], point[1] + light_ray[1][1], point[2] + light_ray[1][2]]
+    return(light_ray, time)
+
+def two_solutions(delta, vector, point, equation_value):
+    print("2 intersection points:")
+    light_ray1 = [[0, 0, 0], [0, 0, 0], [0]]
+    light_ray2 = [[0, 0, 0], [0, 0, 0], [0]]
+    time1 = ((equation_value[1] * (-1)) + sqrt(abs(delta))) / (2 * equation_value[0])
+    time2 = ((equation_value[1] * (-1)) - sqrt(abs(delta))) / (2 * equation_value[0])
+    light_ray1[2][0] = time1
+    light_ray1[1] = [vector[0] * light_ray1[2][0], vector[1] * light_ray1[2][0], vector[2] * light_ray1[2][0]]
+    light_ray1[0] = [point[0] + light_ray1[1][0], point[1] + light_ray1[1][1], point[2] + light_ray1[1][2]]
+    light_ray2[2][0] = time2
+    light_ray2[1] = [vector[0] * light_ray2[2][0], vector[1] * light_ray2[2][0], vector[2] * light_ray2[2][0]]
+    light_ray2[0] = [point[0] + light_ray2[1][0], point[1] + light_ray2[1][1], point[2] + light_ray2[1][2]]
+    return(light_ray1, time1, light_ray2, time2)
+
+def sphere(point, vector, parameter):
+    print("Sphere of radius %i" % parameter)
+    print("Line passing through the point (%i, %i, %i) \
+and parallel to the vector (%i, %i, %i)"
+            % (point[0], point[1], point[2],
+                vector[0], vector[1], vector[2]))
+    light_ray = calcul_light_ray(point, vector)
+    delta, equation_value = calcul_delta_sphere(point, vector, parameter)
+    if (delta > 0):
+        light_ray1, time1, light_ray2, time2 = two_solutions(delta, vector, point, equation_value)
+        print("(%.3f, %.3f, %.3f)\n(%.3f, %.3f, %.3f)" % (light_ray1[0][0], light_ray1[0][1], light_ray1[0][2], light_ray2[0][0], light_ray2[0][1], light_ray2[0][2]))
+    if (delta == 0):
+        light_ray, time = one_solution(delta, light_ray, vector, point, equation_value)
+        print("(%.3f, %.3f, %.3f)" % (light_ray[0][0], light_ray[0][1], light_ray[0][2]))
+    if (delta < 0):
+        print("No intersection point.")
+
+def cylinder(point, vector, parameter):
+    print("Cylinder of radius %i" % parameter)
+    print("Line passing through the point (%i, %i, %i) \
+and parallel to the vector (%i, %i, %i)"
+            % (point[0], point[1], point[2],
+                vector[0], vector[1], vector[2]))
+    light_ray = calcul_light_ray(point, vector)
+    delta, equation_value = calcul_delta_cylinder(point, vector, parameter)
+    if (delta > 0):
+        if (equation_value[0] == 0):
+            exit (84)
+        light_ray1, time1, light_ray2, time2 = two_solutions(delta, vector, point, equation_value)
+        print("(%.3f, %.3f, %.3f)\n(%.3f, %.3f, %.3f)" % (light_ray1[0][0], light_ray1[0][1], light_ray1[0][2], light_ray2[0][0], light_ray2[0][1], light_ray2[0][2]))
+    if (delta == 0):
+        if (equation_value[0] == 0):
+            print("There is an infinite number of intersection points.")
+            exit (84)
+        light_ray, time = one_solution(delta, light_ray, vector, point, equation_value)
+        print("(%.3f, %.3f, %.3f)" % (light_ray[0][0], light_ray[0][1], light_ray[0][2]))
+    if (delta < 0):
+        print("No intersection point.")
+
+def cone(point, vector, parameter):
+    print("Cone with a %i degree angle" % parameter)
+    print("Line passing through the point (%i, %i, %i) \
+and parallel to the vector (%i, %i, %i)"
+            % (point[0], point[1], point[2],
+                vector[0], vector[1], vector[2]))
+    light_ray = calcul_light_ray(point, vector)
+    delta, equation_value = calcul_delta_cone(point, vector, parameter)
+    if (delta > 0):
+        if (equation_value[0] == 0):
+            exit (84)
+        light_ray1, time1, light_ray2, time2 = two_solutions(delta, vector, point, equation_value)
+        print("(%.3f, %.3f, %.3f)\n(%.3f, %.3f, %.3f)" % (light_ray1[0][0], light_ray1[0][1], light_ray1[0][2], light_ray2[0][0], light_ray2[0][1], light_ray2[0][2]))
+    if (delta == 0):
+        if (equation_value[0] == 0):
+            exit (84)
+        light_ray, time = one_solution(delta, light_ray, vector, point, equation_value)
+        print("(%.3f, %.3f, %.3f)" % (light_ray[0][0], light_ray[0][1], light_ray[0][2]))
+    if (delta < 0):
+        print("No intersection point.")
+
+def whiche_surface(surface, point, vector, parameter):
+    if (surface == 1):
+        sphere(point, vector, parameter)
+    if (surface == 2):
+        cylinder(point, vector, parameter)
+    if (surface == 3):
+        cone(point, vector, parameter)
+
+def main():
+    surface = int (sys.argv[1])
+    point = (int (sys.argv[2]), int (sys.argv[3]), int (sys.argv[4]))
+    vector = (int (sys.argv[5]), int (sys.argv[6]), int (sys.argv[7]))
+    parameter = (int (sys.argv[8]))
+    whiche_surface(surface, point, vector, parameter)
+    exit(0)
+
+try:
+    if (len(sys.argv) == 2) and sys.argv[1] == "-h":
+        helper()
+
+    if (len(sys.argv) < 9):
+        print("There is not enough argument")
+        raise IndexError
+
+    if (len(sys.argv) > 9):
+        print("There is too much argument")
+        raise IndexError
+
+    if (sys.argv[5] == '0' and sys.argv[6] == '0' and sys.argv[7] == '0'):
+        print("The direction vector is null")
+        raise ValueError
+
+    int (sys.argv[8])
+
+    if (sys.argv[1] == '3'):
+        if (int (sys.argv[8]) < 0 or int (sys.argv[8]) > 90):
+            print("Bad angle")
+            raise ValueError
+
+    if (sys.argv[1] >= '1' and sys.argv[1] <= '3'):
+        main()
+    else:
+        print("The value for the surface does not correspond to any surface")
+        raise ValueError
+
+
+
+except (IndexError, ValueError):
+    exit(84)

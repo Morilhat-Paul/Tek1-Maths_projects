@@ -1,0 +1,51 @@
+#!/bin/python3
+##
+## EPITECH PROJECT, 2022
+## 110-Borwein
+## File description:
+## 110borwein
+##
+
+from helper import helper
+from midpoint import midpoint
+from trapezoidal import trapezoidal
+from simspon import simspon
+import sys
+
+def main(n: int):
+    midpoint(n)
+    print("")
+    trapezoidal(n)
+    print("")
+    simspon(n)
+
+try:
+    if len(sys.argv) == 2 and sys.argv[1] == "-h":
+        helper()
+        exit(0)
+
+    if len(sys.argv) == 1:
+        print("There is no argument")
+        print("Retry with the '-h'")
+        raise IndexError
+
+    if len(sys.argv) > 2:
+        print("There is too much arguments")
+        print("Retry with the '-h'")
+        raise IndexError
+
+    if  sys.argv[1][0] == '-':
+        print("The argument must be a positive number")
+        print("Retry with the '-h'")
+        raise (ValueError)
+
+    if  sys.argv[1].isdigit() == False:
+        print("The argument is not a constant")
+        print("Retry with the '-h'")
+        raise (ValueError)
+
+
+    main(int (sys.argv[1]))
+
+except (IndexError, ValueError):
+    exit(84)

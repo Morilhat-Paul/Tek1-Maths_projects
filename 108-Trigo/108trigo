@@ -1,0 +1,85 @@
+#!/bin/python3
+##
+## EPITECH PROJECT, 2022
+## Tek1 - Maths_projects
+## File description:
+## 108trigo
+##
+
+import helper
+from matrix import *
+import sys
+from math import sqrt
+
+def get_matrix(av):
+    lenght = int (sqrt(len(av) - 2))
+    matrix = [[] for i in range(lenght)]
+    row = 0
+    line = 0
+    i = 2
+
+    while i < len(av):
+        if row >= lenght:
+            row = 0
+            line += 1
+        matrix[line].append(int (av[i]))
+        row += 1
+        i += 1
+
+    return matrix
+
+def main(av):
+    matrix = get_matrix(av)
+    matrix_I = get_identical_matrix(matrix)
+
+    if av[1] == "EXP":
+        result = exp(matrix, matrix_I)
+    elif av[1] == "COS":
+        result = cos(matrix, matrix_I)
+    elif av[1] == "SIN":
+        result = sin(matrix, matrix_I)
+    elif av[1] == "COSH":
+        result = cosh(matrix, matrix_I)
+    elif av[1] == "SINH":
+        result = sinh(matrix, matrix_I)
+
+    print_matrix(result)
+
+
+try:
+    if len(sys.argv) == 2 and sys.argv[1] == "-h":
+        helper()
+        exit(0)
+
+    if len(sys.argv) == 1:
+        print("There is no argument")
+        raise IndexError
+
+    if sqrt(len(sys.argv) - 2) % 1 != 0:
+        print("The coeficient can't form a square matrix")
+        print("Retry with the '-h'")
+        raise (IndexError)
+
+    if isinstance(sys.argv[1], str) == False:
+        print("The function argument is not an string")
+        print("Retry with the '-h'")
+        raise (ValueError)
+    elif sys.argv[1] != "EXP" and sys.argv[1] != "COS" and sys.argv[1] != "SIN" and sys.argv[1] != "COSH" and sys.argv[1] != "SINH":
+        print("The function argument is not a function that can be applied by the program")
+        print("Retry with the '-h' to hnow wich function are allowed")
+        raise (ValueError)
+
+
+    i = 2
+    while i < len(sys.argv):
+        if sys.argv[i].isdigit():
+            i += 1
+        else:
+            print("Coefficient n°%i is not an integrer => %s" % ((i - 1), sys.argv[i]))
+            print("Retry with the '-h'")
+            raise (ValueError)
+
+    main(sys.argv)
+
+except (IndexError, ValueError):
+    exit(84)

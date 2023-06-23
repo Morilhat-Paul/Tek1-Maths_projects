@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+##
+## EPITECH PROJECT, 2022
+## Tek1 - Maths_projects
+## File description:
+## 101pong
+##
+
+from math import*
+import sys
+
+try:
+    if len(sys.argv) != 8:
+        raise IndexError
+    if int (sys.argv[7]) <= 0:
+        raise ValueError
+
+    def print_VV (X, Y, Z):
+        print("The velocity vector of the ball is:")
+        print("(%.2f, %.2f, %.2f)" % (X, Y, Z))
+
+    def print_CO (X, Y, Z, n):
+        print("At time t + %d, ball coordinates will be:" % n)
+        print("(%.2f, %.2f, %.2f)" % (X, Y, Z))
+
+    def print_A (angle, Zv, z1, Z):
+        if angle >= 0 and angle <= 90:
+            if Zv <= 0 and z1 >= 0:
+                if Z <= 0:
+                    print("The incidence angle is:\n%.2f degrees" % angle)
+                else:
+                    print("The ball won't reach the paddle.")
+            if Zv > 0 and z1 < 0:
+                if Z >= 0:
+                    print("The incidence angle is:\n%.2f degrees" % angle)
+                else:
+                    print("The ball won't reach the paddle.")
+            if Zv > 0 and z1 > 0:
+                print("The ball won't reach the paddle.")
+            if Zv < 0 and z1 < 0:
+                print("The ball won't reach the paddle.")
+
+
+    def ball_coordinate (x0, y0, z0, x1, y1, z1, n):
+        Xv = x1 - x0
+        Yv = y1 - y0
+        Zv = z1 - z0
+        print_VV (Xv, Yv, Zv)
+        X = x1 + Xv * n
+        Y = y1 + Yv * n
+        Z = z1 + Zv * n
+        print_CO (X, Y, Z, n)
+
+    def ball_angle (x0, y0, z0, x1, y1, z1, n):
+        Xv = x1 - x0
+        Yv = y1 - y0
+        Zv = z1 - z0
+        Z = z1 + Zv * n
+        norm_velovity_vector = sqrt(Xv**2 + Yv**2 + Zv**2)
+        rad = asin(Zv / norm_velovity_vector)
+        angle = abs(rad * (180 / pi))
+        print_A(angle, Zv, z1, Z)
+
+    def init_ball (x0, y0, z0, x1, y1, z1, n):
+        ball_coordinate (x0, y0, z0, x1, y1, z1, n)
+        ball_angle(x0, y0, z0, x1, y1, z1, n)
+
+    def arguments():
+        arg1 = float (sys.argv[1])
+        arg2 = float (sys.argv[2])
+        arg3 = float (sys.argv[3])
+        arg4 = float (sys.argv[4])
+        arg5 = float (sys.argv[5])
+        arg6 = float (sys.argv[6])
+        arg7 = int (sys.argv[7])
+        init_ball(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+
+    arguments()
+
+except (IndexError, ValueError):
+    exit (84)
