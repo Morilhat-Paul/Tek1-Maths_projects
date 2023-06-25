@@ -24,7 +24,7 @@ $$ e^x = \sum_{ n=0 }^∞ { x^n \over n! } = 1 + x + { x^2 \over 2! } + { x^3 \o
     But they can also be used to exponentiate (for instance) mathematical objects (as long as they can be elevated to integer powers).<br>
     One could for example compute the cosine of a function, the exponentiation of a graph,<br>
     the hyperbolic tangent of a rotation or the sine of a square matrix (which is what we've done here) ...<br>
-    Given a matrix and the name of a function, your program must apply the latter to the former, and print the result.<br>
+    Given a matrix and the name of a function, this program apply the latter to the former, and print the result.<br>
 </h3>
 
 &nbsp;

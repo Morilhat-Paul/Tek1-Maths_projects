@@ -38,13 +38,11 @@ $$ ∀n ∈ N, I_{n} = \int_{0}^{+∞} \prod_{k=0}^{n} {\frac {\sin( \frac {x} {
 | Cat | Percentages |
 |:--:|:--:|
 | Basic | 100% |
-| cosine | 60% |
-| sine | 60% |
-| exponential | 60% |
-| hyperbolic cosine | 60% |
-| hyperbolic sine | 60% |
+| Simpson | 100% |
+| Midpoint | 100% |
+| Trapezoidal | 100% |
 | Rigor | 100% |
-| **Total** | **72.2%** |
+| **Total** | **100%** |
 
 &nbsp;
 
